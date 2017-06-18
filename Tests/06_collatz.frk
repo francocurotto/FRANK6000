@@ -1,0 +1,43 @@
+# assignments
+ASSGN X        0x00
+ASSGN INIT_VAL 23
+ASSGN COUNT    0x01
+
+# initialization
+CPYPW IMM INIT_VAL
+CPYWP X        # X = INIT_VAL
+ZEROW
+CPYWP COUNT    # COUNT = 0
+
+# loop
+LABEL LOOP
+CPYPW FLR X     # WREG = X
+ANDWP IMM 1     # WREG & 1 (get first bit)
+CPYPW FLR X     # WREG = X
+GTIFZ EVEN      # if (even): ...
+GOTOI ODD       # else if (odd): ...
+LABEL RETURN    # after computation ...
+CPYPW FLR COUNT
+INCRW
+CPYWP COUNT     # COUNT++
+CPYPW FLR X     # WREG = X
+DECRW           # WREG--
+GTIFZ END       # if (WREG == 0): end
+GOTOI LOOP      # else: continue with the algorithm
+
+# even case
+LABEL EVEN
+SHFRW 1          # WREG = WREG << 1 (= X/2)
+CPYWP X          # X = X/2
+GOTOI RETURN     # return to algorithm
+
+#odd case
+LABEL ODD
+ADDWP FLR X      # WREG = WREG + X (= 2*X)
+ADDWP FLR X      # WREG = WREG + X (= 3*X)
+INCRW            # WREG++ (= 3*X + 1)
+CPYWP X          # X = 3*X + 1
+GOTOI RETURN     # return to algorithm
+
+LABEL END
+LOOPF

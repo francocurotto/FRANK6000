@@ -1,0 +1,29 @@
+# assignments
+ASSGN PREVIOUS 0x00
+ASSGN ARRAY_START 0x10
+
+# initialization
+CPYPW IMM ARRAY_START
+CPYWA                 # ADDR = ARRAY_START
+ZEROW
+CPYWR                 # ADDR[0] = 0
+INCRA
+INCRW
+CPYWR                 # ADDR[1] = 1
+DECRA                 # ADDR -> ADDR[0]
+
+# loop (ADDR -> ADDR[i])
+LABEL LOOP
+CPYRW              # WREG = ADDR[i]
+CPYWP PREVIOUS     # PREVIOUS = ADDR[i]
+INCRA              # ADDR -> ADDR[i+1]
+CPYRW              # WREG = ADDR[i+1]
+ADDWP FLR PREVIOUS # WREG = WREG + PREVIOUS (= ADDR[i] + ADDR[i+1])
+GTIFC END          # if (carry): end
+INCRA              # ADDR -> ADDR[i+2]
+CPYWR              # ADDR[i+2] = ADDR[i] + ADDR[i+1]
+DECRA              # ADDR -> ADDR[i+1]
+GOTOI LOOP
+
+LABEL END
+LOOPF

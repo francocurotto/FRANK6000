@@ -1,0 +1,7 @@
+logisim-evolution.jar
+run-logisim.sh
+*.hex
+*.lgs
+*.out
+*.vcd
+*.dot
