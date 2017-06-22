@@ -1,19 +1,18 @@
 // Instruction Stack Testbench
-`include "../edge_macro.v"
 `include "Instruction_Stack.v"
 
 module Instruction_Stack_tb;
 
-    reg[15:0] i_PC;
-    reg       call, rtrn, rst, clk;
+    reg [15:0] i_PC;
+    reg        call, rtrn, rst, clk;
 
-    wire [15:0] o_Stack_pos, o_Stack_neg;
+    wire [15:0] o_Stack;
 
     reg [7:0] ntest = 8'd1; 
     reg [7:0] i     = 8'd0;
     
     task run_test;
-        input [87:0] res_name;
+        input [143:0] res_name;
         input [7:0]  given_res;
         input [7:0]  expctd_res;
         begin
@@ -26,8 +25,8 @@ module Instruction_Stack_tb;
         end
     endtask
 
-    Instruction_Stack #(.addr_width(4), .data_width(16), .active_edge(`POS_EDGE)) DUT1 (.i_PC(i_PC), .call(call), .rtrn(rtrn), .rst(rst), .clk(clk), .o_Stack(o_Stack_pos));
-    Instruction_Stack #(.addr_width(4), .data_width(16), .active_edge(`NEG_EDGE)) DUT2 (.i_PC(i_PC), .call(call), .rtrn(rtrn), .rst(rst), .clk(clk), .o_Stack(o_Stack_neg));
+    Instruction_Stack #(.addr_width(4), .data_width(16)) 
+        DUT1 (.i_PC(i_PC), .call(call), .rtrn(rtrn), .rst(rst), .clk(clk), .o_Stack(o_Stack));
 
     // Test initialization
     initial begin
@@ -47,15 +46,12 @@ module Instruction_Stack_tb;
         // call/rtrn test
         i_PC = 16'd10;
         call = 1'b1;
-        @(negedge clk); // call in line 10 saved (neg)
-        @(posedge clk); // call in line 10 saved (pos)
+        @(posedge clk); // call in line 10 saved
         #1 call = 1'b0;
         rtrn = 1'b1;
         i_PC = 16'd0;
-        @(negedge clk); // rtrn to line 10+1 (neg)
-        #1 run_test("o_Stack_neg", o_Stack_neg, 16'd11);
-        @(posedge clk); // rtrn to line 10+1 (pos)
-        #1 run_test("o_Stack_pos", o_Stack_pos, 16'd11);
+        @(posedge clk); // rtrn to line 10+1 
+        #1 run_test("call/rtrn", o_Stack, 16'd11);
 
         // multiple call/rtrn test
         #1 rst = 1'b1;
@@ -65,7 +61,6 @@ module Instruction_Stack_tb;
         rtrn = 1'b0;
         for (i=8'd1; i<8'd10; i=i+1) begin
             #1 i_PC = i*'h10;
-            @(negedge clk);
             @(posedge clk);
         end
         // return loop
@@ -73,10 +68,8 @@ module Instruction_Stack_tb;
         call = 1'b0;
         rtrn = 1'b1;
         for (i=8'h91; i>8'h10; i=i-'h10) begin
-            @(negedge clk);
-            #1 run_test("o_stack_neg", o_Stack_neg, i);
             @(posedge clk);
-            #1 run_test("o_stack_pos", o_Stack_pos, i);
+            #1 run_test({"multiple call/rtrn"}, o_Stack, i);
         end
 
     end

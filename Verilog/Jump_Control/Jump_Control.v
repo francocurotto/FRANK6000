@@ -1,4 +1,4 @@
-// Jump Control for FRANK5000
+// Jump Control for FRANK6000
 
 module Jump_Control(
     input  [1:0] opcode,

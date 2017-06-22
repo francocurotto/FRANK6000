@@ -1,4 +1,4 @@
-// Arithmetic logic unit for the FRANK5000 processor
+// Arithmetic logic unit for the FRANK6000 processor
 `ifndef _ALU_macro_v_
 `define _ALU_macro_v_
 `include "ALU_macro.v"
@@ -19,14 +19,14 @@ module ALU (
 
     always @* begin
         case (opcode)
-            `ZEROW  : begin r_res <= 8'd0;           r_carry <= 1'b0; end
-            `BNOTW  : begin r_res <= ~WREG;          r_carry <= 1'b0; end
-            `NEGTW  : begin r_res <= -WREG;          r_carry <= 1'b0; end
-            `INCRW  : begin r_res <= WREG + 8'd1;    r_carry <= 1'b0; end
-            `DECRW  : begin r_res <= WREG - 8'd1;    r_carry <= 1'b0; end
-            `ANDWP  : begin r_res <= WREG & p;       r_carry <= 1'b0; end
-            `IORWP  : begin r_res <= WREG | p;       r_carry <= 1'b0; end
-            `XORWP  : begin r_res <= WREG ^ p;       r_carry <= 1'b0; end 
+            `ZEROW  : begin r_res <= 8'd0;          r_carry <= 1'b0; end
+            `BNOTW  : begin r_res <= ~WREG;         r_carry <= 1'b0; end
+            `NEGTW  : begin r_res <= -WREG;         r_carry <= 1'b0; end
+            `INCRW  : begin r_res <= WREG + 8'd1;   r_carry <= 1'b0; end
+            `DECRW  : begin r_res <= WREG - 8'd1;   r_carry <= 1'b0; end
+            `ANDWP  : begin r_res <= WREG & p;      r_carry <= 1'b0; end
+            `IORWP  : begin r_res <= WREG | p;      r_carry <= 1'b0; end
+            `XORWP  : begin r_res <= WREG ^ p;      r_carry <= 1'b0; end 
             `ADDWP  : {r_carry, r_res} <= WREG + p;
             `SUBWP  : {r_carry, r_res} <= WREG - p;
             `CMPWP  : begin 

@@ -1,4 +1,3 @@
-`ifndef _ALU_macro_v_
 `define _ALU_macro_v_
 
 `define ZEROW 4'b0000
@@ -14,5 +13,3 @@
 `define CMPWP 4'b1010
 `define SHFLW 4'b1011
 `define SHFRW 4'b1100
-
-`endif
