@@ -1,5 +1,8 @@
-`ifndef _Control_Unit_macro_v_
 `define _Control_Unit_macro_v_
+
+`define INSTR_FETCH  2'b01
+`define CYCLE1_INSTR 2'b10
+`define CYCLE2_INSTR 2'b00
 
 `define LOOPF     4'b0000
 `define GOTO_jump 4'b0001
@@ -8,7 +11,7 @@
 `define R2_IMM_BT 4'b0100
 `define R2_FLR    4'b0101
 `define R0_Type_A 4'b0110
-
+`define NOOPR     4'b0111
 `define CPYWA     4'b1000
 `define CPYWR     4'b1001
 
@@ -17,5 +20,3 @@
 `define CPYAW     4'b1101
 `define CPYPW_IMM 4'b1110
 `define CPYPW_FLR 4'b1111
-
-`endif

@@ -12,15 +12,15 @@ module Instruction_Stack_tb;
     reg [7:0] i     = 8'd0;
     
     task run_test;
-        input [143:0] res_name;
+        input [143:0] test_name;
         input [7:0]  given_res;
         input [7:0]  expctd_res;
         begin
             if (given_res == expctd_res)
-                $display("test %d for %s at %d[s] PASS", ntest, res_name, $realtime);
+                $display("test %d %s at %d[s] PASS", ntest, test_name, $realtime);
             else
-                $display("test %d for %s at %d[s] FAILED, expected %h, got %h", 
-                ntest, res_name, $realtime, expctd_res, given_res);
+                $display("test %d %s at %d[s] FAILED, expected %h, got %h", 
+                ntest, test_name, $realtime, expctd_res, given_res);
             ntest = ntest + 1;
         end
     endtask
