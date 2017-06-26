@@ -15,16 +15,18 @@ module CPU_tb;
         clk = 1'b0;
         we  = 1'b0;
         rst = 1'b0;
-        $readmemh("../../Tests/01_move.hex", DUT.PC_Instr_Mem.Instr_RAM.mem);
+        //$readmemh("../../Tests/01_move.hex", DUT.Instr_Mem.mem);
+        //$readmemh("../../Tests/02_add.hex", DUT.Instr_Mem.mem);
+        //$readmemh("../../Tests/04_loop.hex", DUT.Instr_Mem.mem);
+        //$readmemh("../../Tests/05_fibonacci.hex", DUT.Instr_Mem.mem);
+        //$readmemh("../../Tests/06_collatz.hex", DUT.Instr_Mem.mem);
+        //$readmemh("../../Tests/07_mult.hex", DUT.Instr_Mem.mem);
+        //$readmemh("../../Tests/08_call.hex", DUT.Instr_Mem.mem);
+        $readmemh("../../Tests/09_multi_call.hex", DUT.Instr_Mem.mem);
         #1 rst = 1'b1;
         #1 rst = 1'b0;
-        #1 clk = 1'b1;
-        #1 clk = 1'b0;
-        #1 rst = 1'b1;
-        #1 rst = 1'b0;
-        #4 clk = 1'b1;
-        #10 clk =1'b0;
-        repeat (100) #10 clk = !clk;
+        #8 clk = 1'b0;
+        repeat (2000) #10 clk = !clk;
     end
 
     // test core

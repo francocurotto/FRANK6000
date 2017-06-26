@@ -55,7 +55,7 @@ module Control_Unit(
                     `CPYWR     : r_control_bus = 16'b0000_0010_0001_0100;
                     `CPYRW     : r_control_bus = 16'b0000_0010_0000_0000;
                     `NOOPR     : r_control_bus = 16'b0000_0000_0001_0000;
-                    `CPYWP     : r_control_bus = 16'b0000_0000_0001_0000;
+                    `CPYWP     : r_control_bus = 16'b0000_0000_0001_0100;
                     `CPYPW_IMM : r_control_bus = 16'b0000_0000_1001_0010;
                     `CPYPW_FLR : r_control_bus = 16'b0000_0000_0000_0000;
                     `R0_Type_A : r_control_bus = 16'b0000_0100_0101_1001;

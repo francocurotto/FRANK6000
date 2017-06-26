@@ -5,6 +5,9 @@ ASSGN MultHi 0x10
 ASSGN MultLo 0x11
 
 # initialization
+ZEROW
+CPYWP MultLo
+CPYWP MultHi
 CPYPW IMM 20
 CPYWP A
 CPYPW IMM 40
@@ -32,4 +35,7 @@ CPYWP MultHi
 GOTOI CONTINUE
 
 LABEL END
+# debug code
+CPYPW FLR MultHi
+CPYPW FLR MultLo
 LOOPF
