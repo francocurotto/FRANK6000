@@ -25,4 +25,4 @@ Multi single cicle 8 bits processor.
 ![alt tag](https://github.com/francocurotto/FRANK5000/blob/master/FRANK6000.png)
 
 ### Status
-The Logisim version of the processor is complete. The Verilog version is in development. The idea of the Verilog version is to be a copy of its Logisim counterpart, with extra features for its implementation in FPGA,specifically and Lattice iCE40 (http://www.latticesemi.com/Products/FPGAandCPLD/iCE40.aspx), using Yosys compiler (http://www.clifford.at/yosys/).
+The Logisim version of the processor is complete. The Verilog version is complete. The last step is to encapsulate the processor in a module so you can easily load programs from the PC.
