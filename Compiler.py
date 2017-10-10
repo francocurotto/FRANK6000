@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys, os, string, traceback
 
 def main():
@@ -45,15 +46,16 @@ def main():
     fHex.close()
     
 def handleInput():
-    if len(sys.argv) == 2:
+    try:
         srcPath = sys.argv[1]
         fileList = os.path.splitext(srcPath)
         lgsPath = fileList[0] + ".lgs"
         hexPath = fileList[0] + ".hex"
-    else:
-        print "Usage: python compiler.py input-path"
+    except:
+        print "Usage: ./Compiler.py input-path"
         exit()
     
+    print "Compiling " + srcPath + "..."
     fSrc = open(srcPath, "r")
     fLgs = open(lgsPath, "w")
     fHex = open(hexPath, "w")

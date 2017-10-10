@@ -71,7 +71,6 @@ module Instruction_Stack_tb;
             @(posedge clk);
             #1 run_test({"multiple call/rtrn"}, o_Stack, i);
         end
-
     end
 
     initial begin

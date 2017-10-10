@@ -9,10 +9,12 @@
 `include "../Control_Unit/Control_Unit.v"
 
 module CPU (
-    //input   [1:0] i_state, 
     input  [15:0] i_instr,
-    input         i_clk, i_rst, i_we,
-    output  [7:0] o_WREG);
+    input   [7:0] i_instr_addr,
+    input         i_ON, i_clk, i_rst, i_we,
+    output  [7:0] o_WREG,
+    output        o_loopf,
+    output  [7:0] o_debug);
 
     // Control Unit
     wire [3:0] w_control;
@@ -32,26 +34,30 @@ module CPU (
         PC (.D(w_PC_next), .clk(i_clk), .rst(i_rst), .we(w_PCw), .Q(w_PC));
 
     // Next Program Counter Logic
-    wire [15:0] w_instr;
+    wire [15:0] w_instr_ON;
     wire        w_jump_flag;
     wire  [7:0] w_pi;
     wire  [7:0] w_PC_plus_1 = w_PC + 8'b1;
     wire  [7:0] w_PC_jump   = (w_jump_flag==0) ? w_PC_plus_1 :
-                           /*(w_jump_flag==1)*/ w_instr[7:0];
+                           /*(w_jump_flag==1)*/ w_instr_ON[7:0];
     assign w_PC_next = (w_j_mode==0) ? w_PC_plus_1 :
                        (w_j_mode==1) ? w_PC_jump   :                       
                        (w_j_mode==2) ? w_stack     :                       
                      /*(w_j_mode==3)*/ 8'bx; // never happens
 
     // Instruction Memory
+    wire [15:0] w_instr;
+    wire  [7:0] w_instr_addr;
     RAM #(.addr_width(8), .data_width(16))
-        Instr_Mem (.addr(w_PC), .din(i_instr), .clk(i_clk), .we(i_we), .dout(w_instr));
-    assign w_control = w_instr[15:12];
-    assign w_pi      = w_instr[7:0];
+        Instr_Mem (.addr(w_instr_addr), .din(i_instr), .clk(i_clk), .we(i_we), .dout(w_instr));
+    assign w_instr_addr = i_ON ? w_PC : i_instr_addr;
+    assign w_instr_ON   = i_ON ? w_instr : 16'b0; 
+    assign w_control    = w_instr_ON[15:12];
+    assign w_pi         = w_instr_ON[7:0];
 
     // Jump Control
     wire [2:0] w_STATUS;
-    wire [1:0] w_jump_opcode = w_instr[9:8];
+    wire [1:0] w_jump_opcode = w_instr_ON[9:8];
     wire w_jump_control;
     Jump_Control Jump_Control (.opcode(w_jump_opcode), .status(w_STATUS), .jump(w_jump_control));
     assign w_jump_flag = w_jump & w_jump_control;
@@ -84,7 +90,7 @@ module CPU (
                        /*(w_WREGin==3)*/ w_ADDR;
 
     // ALU (Arithmetic Logic Unit)
-    wire [3:0] w_ALU_opcode = w_instr[11:8];
+    wire [3:0] w_ALU_opcode = w_instr_ON[11:8];
     wire [7:0] w_ALU_WA;
     wire [7:0] w_ALU_pi;
     wire [2:0] w_ALU_status;
@@ -98,6 +104,8 @@ module CPU (
     Register #(.width(3)) 
         STATUS (.D(w_ALU_status), .clk(i_clk), .rst(i_rst), .we(w_STATUSw), .Q(w_STATUS));
 
-    assign o_WREG = w_WREG;
+    assign o_WREG  = w_WREG;
+    assign o_loopf = (~|w_instr_ON) & i_ON;
+    assign o_debug = w_PC;
 
 endmodule

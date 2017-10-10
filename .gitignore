@@ -5,3 +5,6 @@ run-logisim.sh
 *.out
 *.vcd
 *.dot
+*.asc
+*.bin
+*.blif
