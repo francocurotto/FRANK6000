@@ -1,5 +1,7 @@
+// Binary to 7 Segment for the FRANK6000 processor
+
 module Bin_2_7Seg (
-    input        clk,
+    input        i_clk,
     input  [3:0] i_binary_num,
     output       o_segment_A,
     output       o_segment_B,
@@ -11,7 +13,7 @@ module Bin_2_7Seg (
     
     reg [6:0] r_hex_encoding = 7'h00;
     
-    always @(posedge clk) begin
+    always @(posedge i_clk) begin
         case (i_binary_num)
             4'b0000 : r_hex_encoding <= 7'h7E;
             4'b0001 : r_hex_encoding <= 7'h30;
@@ -30,9 +32,8 @@ module Bin_2_7Seg (
             4'b1110 : r_hex_encoding <= 7'h4F;
             4'b1111 : r_hex_encoding <= 7'h47;
         endcase
-    end // always @(posedge i_Clk)
+    end
     
-    // r_hex_encoding[7] is unused
     assign o_segment_A = r_hex_encoding[6]; 
     assign o_segment_B = r_hex_encoding[5]; 
     assign o_segment_C = r_hex_encoding[4]; 
@@ -41,6 +42,6 @@ module Bin_2_7Seg (
     assign o_segment_F = r_hex_encoding[1]; 
     assign o_segment_G = r_hex_encoding[0];
     
-endmodule // Bin_2_7Seg
+endmodule
     
     

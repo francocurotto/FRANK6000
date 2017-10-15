@@ -17,40 +17,39 @@ module instr_RX_tb();
     reg r_rx_serial = 1;
     wire [15:0] w_rx_instr;
   
-    // Takes in input byte and serializes it 
+    // takes in input byte and serializes it 
     task UART_WRITE_BYTE;
         input [7:0] i_data;
         integer     ii;
         begin 
-            // Send Start Bit
+            // send start bit
             r_rx_serial <= 1'b0;
             #(c_BIT_PERIOD);
             #1000;
       
-            // Send Data Byte
+            // send data byte
             for (ii=0; ii<8; ii=ii+1) begin
                 r_rx_serial <= i_data[ii];
                 #(c_BIT_PERIOD);
             end
       
-            // Send Stop Bit
+            // send stop bit
             r_rx_serial <= 1'b1;
             #(c_BIT_PERIOD);
         end
-    endtask // UART_WRITE_BYTE
-  
+    endtask 
+
     Instr_RX #(.CLKS_PER_BIT(c_CLKS_PER_BIT)) UART_RX_INST (
         .clk(clk),
         .i_rx_serial(r_rx_serial),
         .o_rx_dv(),
-        .o_rx_instr(w_rx_instr),
-        .o_rx_dv2());
+        .o_rx_instr(w_rx_instr));
   
     always #(c_CLOCK_PERIOD_NS/2) clk <= !clk;
-  
-    // Main Testing:
+    
+    // main testing
     initial begin
-        // Send a command to the UART (exercise Rx)
+        // send a command to the UART (exercise Rx)
         @(posedge clk);
         UART_WRITE_BYTE(8'h37);
         @(posedge clk);
@@ -59,7 +58,7 @@ module instr_RX_tb();
         UART_WRITE_BYTE(8'hAB);
         @(posedge clk);
             
-        // Check that the correct command was received
+        // check that the correct command was received
         if (w_rx_instr == 16'hAB37) $display("Test Passed - Correct Instruction Received");
         else $display("Test Failed - Incorrect Instruction Received");
         $finish();

@@ -1,21 +1,21 @@
-// RAM for FRANK6000 processor
+// RAM for the FRANK6000 processor
 
 `ifndef _RAM_v_
 `define _RAM_v_
 
 module RAM #(
-    parameter addr_width  = 8,
-    parameter data_width  = 8) (
-    input      [addr_width-1:0] addr,    
-    input      [data_width-1:0] din,
-    input                       clk, we,
-    output reg [data_width-1:0] dout);
+    parameter ADDR_WIDTH  = 8,
+    parameter DATA_WIDTH  = 8) (
+    input      [ADDR_WIDTH-1:0] i_addr,    
+    input      [DATA_WIDTH-1:0] i_data,
+    input                       i_clk, i_we,
+    output reg [DATA_WIDTH-1:0] or_data);
     
-    reg [data_width-1:0] mem [(1<<addr_width)-1:0];
+    reg [DATA_WIDTH-1:0] mem [(1<<ADDR_WIDTH)-1:0];
 
-    always @(posedge clk) begin
-        if (we) mem[addr] <= din;
-        dout = mem[addr];
+    always @(posedge i_clk) begin
+        if (i_we) mem[i_addr] <= i_data;
+        or_data = mem[i_addr];
     end
 
 endmodule

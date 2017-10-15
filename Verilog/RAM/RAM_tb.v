@@ -3,83 +3,85 @@
 
 module RAM_tb;
 
-    reg  [7:0] addr;
-    reg  [7:0] din;
-    reg        clk, we;
-    wire [7:0] dout;
+    reg  [7:0] r_addr;
+    reg  [7:0] r_data;
+    reg        r_clk   = 1'b0;
+    reg        r_we    = 1'b0;
+    wire [7:0] w_data;
 
-    reg [7:0] ntest = 8'd1; 
-    reg [7:0] i     = 8'd0;
+    reg  [7:0] ntest = 1; 
+    reg [15:0] curr_time;
+    reg  [7:0] i;
     
     task run_test;
-        input [103:0] res_name;
-        input [7:0]  given_res;
-        input [7:0]  expctd_res;
+        input [8*13-1:0] i_test_name;
+        input      [7:0] i_expctd_res;
         begin
-            if (given_res == expctd_res)
-                $display("test %d for %s at %d[s] PASS", ntest, res_name, $realtime);
+            #1;
+            curr_time = $realtime;
+            if (w_data == i_expctd_res)
+                $display("test %d for %s at %d[s] PASS", ntest, i_test_name, curr_time);
             else
-                $display("test %d for %s at %d[s] FAILED, expected  dout=%h, got %h", 
-                ntest, res_name, $realtime, expctd_res, given_res);
+                $display("test %d for %s at %d[s] FAILED, expected  w_data=%h, got %h", 
+                ntest, i_test_name, curr_time, i_expctd_res, w_data);
             ntest = ntest + 1;
         end
     endtask
 
-    RAM #(.addr_width(8), .data_width(8))
-        DUT (.addr(addr), .din(din), .clk(clk), .we(we), .dout(dout));
+    RAM #(
+        .ADDR_WIDTH (8), 
+        .DATA_WIDTH (8)) DUT (
+            .i_addr (r_addr), 
+            .i_data (r_data), 
+            .i_clk  (r_clk),
+            .i_we   (r_we), 
+            .or_data (w_data));
 
-    // test initialization
-    initial begin 
-        clk  = 1'b0;
-        we   = 1'b0;
-        addr = 9'b0;
-        din  = 8'b0;
-        repeat (100) #10 clk = !clk;
-    end
+    always #10 r_clk <= !r_clk;
 
     // test core
     initial begin
-        // write/read in address test
-        #1 we   = 1'b1;
-        #1 addr = 8'd3;
-        #1 din  = 8'd11;
-        @(posedge clk); // write in RAM
-        @(posedge clk); // output RAM
-        #1 run_test("read/write 1", dout, 8'd11);
+        // write/read in r_address test
+        #1 r_addr = 8'd3;
+        #1 r_data = 8'd11;
+        #1 r_we   = 1'b1;
+        @(posedge r_clk); // write in RAM
+        @(posedge r_clk); // output RAM
+        run_test("read/write 1", 8'd11);
         //
-        #1 addr = 8'd6;
-        #1 din  = 8'd22;
-        @(posedge clk);
-        @(posedge clk);
-        #1 run_test("read/write 2", dout, 8'd22);
+        #1 r_addr = 8'd6;
+        #1 r_data = 8'd22;
+        @(posedge r_clk);
+        @(posedge r_clk);
+        #1 run_test("read/write 2", 8'd22);
         //
-        #1 we = 1'b0;
-        #1 addr = 8'd3;
-        #1 din  = 8'd33;
-        @(posedge clk);
-        @(posedge clk);
-        #1 run_test("read/write 3", dout, 8'd11);
+        #1 r_addr = 8'd3;
+        #1 r_data = 8'd33;
+        #1 r_we   = 1'b0;
+        @(posedge r_clk);
+        @(posedge r_clk);
+        run_test("read/write 3", 8'd11);
         //
-        #1 addr = 8'd6;
-        #1 din  = 8'd44;
-        @(posedge clk);
-        @(posedge clk);
-        #1 run_test("read/write 4", dout, 8'd22);
+        #1 r_addr = 8'd6;
+        #1 r_data = 8'd44;
+        @(posedge r_clk);
+        @(posedge r_clk);
+        run_test("read/write 4", 8'd22);
 
         // loop test
-        #1 we = 1'b1;
+        #1 r_we = 1'b1;
         for (i=8'd1; i<8'd10; i=i+1) begin
-            #1 addr = i;
-            #1 din  = i*10;
-            @(posedge clk);
+            #1 r_addr = i;
+            #1 r_data = i*10;
+            @(posedge r_clk);
         end
-        #1 we = 1'b0;
+        #1 r_we = 1'b0;
         for (i=8'd1; i<8'd10; i=i+1) begin
-            #1 addr = i;
-            @(posedge clk);
-            #1 run_test({"loop write ", 8'h30+i}, dout, i*10);
+            #1 r_addr = i;
+            @(posedge r_clk);
+            #1 run_test({"loop write ", 8'h30+i}, i*10);
         end
-
+        $finish();
     end
 
     initial begin

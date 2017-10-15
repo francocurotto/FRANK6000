@@ -1,13 +1,13 @@
-// Regiter for FRANK6000 processor
+// Register for the FRANK6000 processor
 
-module Register #(parameter width=8) (
-    input      [width-1:0] D,
-    input                  clk, rst, we,
-    output reg [width-1:0] Q);
+module Register #(parameter WIDTH=8) (
+    input      [WIDTH-1:0] i_D,
+    input                  i_clk, i_rst, i_we,
+    output reg [WIDTH-1:0] or_Q);
     
-    always @(posedge clk, posedge rst) begin
-        if (rst) Q <= 'b0;
-        else if (we) Q <= D;
+    always @(posedge i_clk, posedge i_rst) begin
+        if (i_rst)     or_Q <= 'b0;
+        else if (i_we) or_Q <= i_D;
     end
 
 endmodule

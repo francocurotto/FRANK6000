@@ -1,18 +1,18 @@
-// Jump Control for FRANK6000
+// Jump Control for the FRANK6000 processor
 
 module Jump_Control(
-    input  [1:0] opcode,
-    input  [2:0] status,
-    output       jump);
+    input  [1:0] i_opcode,
+    input  [2:0] i_status,
+    output       o_jump);
 
-    // status[0]: Zero flag
-    // status[1]: Negative flag
-    // status[2]: Carry out flag
+    // i_status[0]: Zero flag
+    // i_status[1]: Negative flag
+    // i_status[2]: Carry out flag
 
     reg r_jump;
 
     always @* begin
-        casex ({opcode, status}) 
+        casex ({i_opcode, i_status}) 
             5'b00_xxx : r_jump = 1; // GOTOI jump
             5'b01_xx1 : r_jump = 1; // GTIFZ jump
             5'b10_x1x : r_jump = 1; // GTIFN jump
@@ -21,6 +21,6 @@ module Jump_Control(
         endcase
     end
 
-    assign jump = r_jump;
+    assign o_jump = r_jump;
 
 endmodule
