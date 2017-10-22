@@ -7,17 +7,7 @@ module Jump_Control_tb;
     reg [2:0] r_status;
     wire      w_jump;
 
-    task run_test;
-        input i_expctd_res;
-        begin
-            #1;
-            if (w_jump == i_expctd_res)
-                $display("test for input %b PASS", {r_opcode, r_status});
-            else
-                $display("test for input %b FAILED, expected %b, got %b", 
-                {r_opcode, r_status}, i_expctd_res, w_jump);
-        end
-    endtask
+    `include "../run_test.v"
     
     Jump_Control DUT (
         .i_opcode (r_opcode),
@@ -27,28 +17,28 @@ module Jump_Control_tb;
     initial begin
         //
         {r_opcode, r_status} = 5'b00_000;
-        run_test(1'b1);
+        #1 run_test("test_1", w_jump, 1'b1);
         //
         {r_opcode, r_status} = 5'b00_111;
-        run_test(1'b1);
+        #1 run_test("test_2", w_jump, 1'b1);
         //
         {r_opcode, r_status} = 5'b01_001;
-        run_test(1'b1);
+        #1 run_test("test_3", w_jump, 1'b1);
         //
         {r_opcode, r_status} = 5'b01_110;
-        run_test(1'b0);
+        #1 run_test("test_4", w_jump, 1'b0);
         //
         {r_opcode, r_status} = 5'b10_010;
-        run_test(1'b1);
+        #1 run_test("test_5", w_jump, 1'b1);
         //
         {r_opcode, r_status} = 5'b10_101;
-        run_test(1'b0);
+        #1 run_test("test_6", w_jump, 1'b0);
         //
         {r_opcode, r_status} = 5'b11_100;
-        run_test(1'b1);
+        #1 run_test("test_7", w_jump, 1'b1);
         //
         {r_opcode, r_status} = 5'b11_011;
-        run_test(1'b0);
+        #1 run_test("test_8", w_jump, 1'b0);
     end
 endmodule
 

@@ -8,4 +8,5 @@ run-logisim.sh
 *.asc
 *.bin
 *.blif
+*.swp
 refactor list
