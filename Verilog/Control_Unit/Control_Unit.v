@@ -4,52 +4,52 @@
 `include "Control_Unit_macro.v"
 `endif
 
-module Control_Unit(
-    input        clk, rst,
-    input  [3:0] control_input,
-    output       jump,
-    output [1:0] j_mode,
-    output       call,
-    output       return,
-    output       ADDRin,
-    output       FRin,
-    output [1:0] WREGin,
-    output       ALUin1,
-    output       ALUin2,
-    output       PCw,
-    output       ADDRw,
-    output       FRw,
-    output       WREGw,
-    output       STATUSw);
+module Control_Unit (
+    input        i_clk, i_rst,
+    input  [3:0] i_control_input,
+    output       o_jump,
+    output [1:0] o_j_mode,
+    output       o_call,
+    output       o_return,
+    output       o_ADDRin,
+    output       o_FRin,
+    output [1:0] o_WREGin,
+    output       o_ALUin1,
+    output       o_ALUin2,
+    output       o_PCw,
+    output       o_ADDRw,
+    output       o_FRw,
+    output       o_WREGw,
+    output       o_STATUSw);
     
-    reg  [1:0] r_unit_state;
+    reg  [1:0] r_state;
     reg [15:0] r_control_bus;
 
     // next state logic
-    always @(posedge clk, posedge rst) begin
-        if (rst) r_unit_state = `CYCLE2_INSTR;
+    always @(posedge i_clk, posedge i_rst) begin
+        if (i_rst) r_state <= `CYCLE2_INSTR;
         else begin
-            case (r_unit_state)
-                `INSTR_FETCH  : r_unit_state = `CYCLE1_INSTR;
+            case (r_state)
+                `INSTR_FETCH  : r_state <= `CYCLE1_INSTR;
                 `CYCLE1_INSTR : begin
-                    if (control_input == `CPYRW | 
-                        control_input == `CPYPW_FLR | 
-                        control_input == `R2_FLR | 
-                        control_input == `RETRN) 
-                            r_unit_state = `CYCLE2_INSTR;
-                    else
-                            r_unit_state = `INSTR_FETCH;
+                    if (i_control_input == `CPYRW | 
+                        i_control_input == `CPYPW_FLR | 
+                        i_control_input == `R2_FLR | 
+                        i_control_input == `RETRN) begin
+                            r_state <= `CYCLE2_INSTR;
+                    end
+                    else r_state <= `INSTR_FETCH;
                 end
-                `CYCLE2_INSTR : r_unit_state = `INSTR_FETCH;
+                `CYCLE2_INSTR : r_state <= `INSTR_FETCH;
             endcase
         end
     end
     
     // output logic
-    always @(control_input, r_unit_state) begin
-        case (r_unit_state)
+    always @(i_control_input, r_state) begin
+        case (r_state)
             `INSTR_FETCH  :
-                case (control_input)
+                case (i_control_input)
                     `CPYWA     : r_control_bus = 16'b0000_0000_0001_1000;
                     `CPYAW     : r_control_bus = 16'b0000_0001_1001_0010;
                     `CPYWR     : r_control_bus = 16'b0000_0010_0001_0100;
@@ -68,7 +68,7 @@ module Control_Unit(
                     default    : r_control_bus = 16'b0000_0000_0000_0000;
                 endcase
             `CYCLE1_INSTR :
-                case (control_input)
+                case (i_control_input)
                     `CPYRW     : r_control_bus = 16'b0000_0001_0001_0010;
                     `CPYPW_FLR : r_control_bus = 16'b0000_0001_0001_0010;
                     `R2_FLR    : r_control_bus = 16'b0000_0000_0011_0011;
@@ -79,19 +79,19 @@ module Control_Unit(
         endcase
     end
 
-    assign jump    = r_control_bus[15];
-    assign j_mode  = r_control_bus[14:13];
-    assign call    = r_control_bus[12];
-    assign return  = r_control_bus[11];
-    assign ADDRin  = r_control_bus[10];
-    assign FRin    = r_control_bus[9];
-    assign WREGin  = r_control_bus[8:7];
-    assign ALUin1  = r_control_bus[6];
-    assign ALUin2  = r_control_bus[5];
-    assign PCw     = r_control_bus[4];
-    assign ADDRw   = r_control_bus[3];
-    assign FRw     = r_control_bus[2];
-    assign WREGw   = r_control_bus[1];
-    assign STATUSw = r_control_bus[0];
+    assign o_jump    = r_control_bus[15];
+    assign o_j_mode  = r_control_bus[14:13];
+    assign o_call    = r_control_bus[12];
+    assign o_return  = r_control_bus[11];
+    assign o_ADDRin  = r_control_bus[10];
+    assign o_FRin    = r_control_bus[9];
+    assign o_WREGin  = r_control_bus[8:7];
+    assign o_ALUin1  = r_control_bus[6];
+    assign o_ALUin2  = r_control_bus[5];
+    assign o_PCw     = r_control_bus[4];
+    assign o_ADDRw   = r_control_bus[3];
+    assign o_FRw     = r_control_bus[2];
+    assign o_WREGw   = r_control_bus[1];
+    assign o_STATUSw = r_control_bus[0];
 
 endmodule

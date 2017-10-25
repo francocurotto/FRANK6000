@@ -5,11 +5,10 @@
 // Example: 25 MHz Clock, 115200 baud UART
 // (25000000)/(115200) = 217
  
-module Instr_RX #(
-    parameter CLKS_PER_BIT = 217) (
-    input         clk, rst, i_rx_serial,
-    output        o_rx_dv,
-    output [15:0] o_rx_instr);
+module Instr_RX #(parameter CLKS_PER_BIT = 217) (
+    input         i_rx_serial, i_clk, i_rst, 
+    output [15:0] o_rx_instr,
+    output        o_rx_dv);
    
     parameter IDLE         = 3'b000;
     parameter RX_START_BIT = 3'b001;
@@ -22,19 +21,17 @@ module Instr_RX #(
     reg [15:0] r_rx_instr  = 0;
     reg        r_rx_dv     = 0;
     reg  [2:0] r_state     = 0;
-    reg        r_rx_dv2    = 0;
  
     // Purpose: Control RX state machine
-    always @(posedge clk) begin
-        if (rst) begin
-            r_clk_count = 0;
-            r_bit_idx   = 0;
-            r_rx_instr  = 0;
-            r_rx_dv     = 0;
-            r_state     = IDLE; 
+    always @(posedge i_clk) begin
+        if (i_rst) begin
+            r_clk_count <= 0;
+            r_bit_idx   <= 0;
+            r_rx_instr  <= 0;
+            r_rx_dv     <= 0;
+            r_state     <= IDLE; 
         end
         else begin
-            r_rx_dv2 <= r_rx_dv;
             case (r_state)
                 IDLE : begin
                     r_rx_dv     <= 1'b0;
@@ -42,7 +39,7 @@ module Instr_RX #(
 
                     if (i_rx_serial == 1'b0) r_state <= RX_START_BIT;  // Start bit detected
                     else r_state <= IDLE;
-                end // case: IDLE
+                end 
       
                 // Check middle of start bit to make sure it's still low
                 RX_START_BIT : begin
@@ -57,7 +54,7 @@ module Instr_RX #(
                         r_clk_count <= r_clk_count + 1;
                         r_state     <= RX_START_BIT;
                     end
-                end // case: RX_START_BIT
+                end 
       
                 // Wait CLKS_PER_BIT-1 clock cycles to sample serial data
                 RX_DATA_BITS : begin
@@ -82,7 +79,7 @@ module Instr_RX #(
                             r_state   <= RX_DATA_BITS;
                         end
                     end
-                end // case: RX_DATA_BITS
+                end 
      
                 // Receive Stop bit.  Stop bit = 1
                 RX_STOP_BIT : begin
@@ -99,20 +96,20 @@ module Instr_RX #(
                         r_clk_count <= 0;
                         r_state     <= CLEANUP;
                     end
-                end // case: RX_STOP_BIT
+                end 
       
                 // Stay here 1 clock
                 CLEANUP : begin
                     r_state <= IDLE;
                     r_rx_dv <= 1'b0;
-                end // case : CLEANUP
+                end
       
                 default : r_state <= IDLE;
             endcase
         end
     end
   
-    assign o_rx_dv    = r_rx_dv;
     assign o_rx_instr = r_rx_instr;
+    assign o_rx_dv    = r_rx_dv;
   
-endmodule // UART_RX
+endmodule 
