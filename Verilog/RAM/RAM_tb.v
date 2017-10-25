@@ -1,5 +1,6 @@
 // RAM Testbench
 `include "RAM.v"
+`include "../Tester/Tester.v"
 
 module RAM_tb;
 
@@ -11,7 +12,7 @@ module RAM_tb;
 
     reg  [7:0] i;
     
-    `include "../run_test.v" 
+    Tester #(.WIDTH(8)) Tester8();
 
     RAM #(
         .ADDR_WIDTH (8), 
@@ -32,26 +33,26 @@ module RAM_tb;
         #1 r_we   = 1'b1;
         @(posedge r_clk); // write in RAM
         @(posedge r_clk); // output RAM
-        #1 run_test("read/write 1", w_data, 8'd11);
+        #1 Tester8.run_test("read/write 1", w_data, 8'd11);
         //
         #1 r_addr = 8'd6;
         #1 r_data = 8'd22;
         @(posedge r_clk);
         @(posedge r_clk);
-        #1 run_test("read/write 2", w_data, 8'd22);
+        #1 Tester8.run_test("read/write 2", w_data, 8'd22);
         //
         #1 r_addr = 8'd3;
         #1 r_data = 8'd33;
         #1 r_we   = 1'b0;
         @(posedge r_clk);
         @(posedge r_clk);
-        #1 run_test("read/write 3", w_data, 8'd11);
+        #1 Tester8.run_test("read/write 3", w_data, 8'd11);
         //
         #1 r_addr = 8'd6;
         #1 r_data = 8'd44;
         @(posedge r_clk);
         @(posedge r_clk);
-        #1 run_test("read/write 4", w_data, 8'd22);
+        #1 Tester8.run_test("read/write 4", w_data, 8'd22);
 
         // loop test
         #1 r_we = 1'b1;
@@ -64,7 +65,7 @@ module RAM_tb;
         for (i=8'd1; i<8'd10; i=i+1) begin
             #1 r_addr = i;
             @(posedge r_clk);
-            #1 run_test({"loop_write_", 8'h30+i}, w_data, i*10);
+            #1 Tester8.run_test({"loop_write_", 8'h30+i}, w_data, i*10);
         end
         $finish();
     end

@@ -1,5 +1,6 @@
 // Instruction Stack Testbench
 `include "Instruction_Stack.v"
+`include "../Tester/Tester.v"
 
 module Instruction_Stack_tb;
 
@@ -12,7 +13,7 @@ module Instruction_Stack_tb;
 
     reg [7:0] i;
     
-    `include "../run_test.v" 
+    Tester #(.WIDTH(16)) Tester16();
 
     Instruction_Stack #(
         .ADDR_WIDTH  (4), 
@@ -39,7 +40,7 @@ module Instruction_Stack_tb;
         r_rtrn    = 1'b1;
         r_PC      = 16'd0;
         @(posedge r_clk); // rtrn to line 10+1 
-        #1 run_test("call/rtrn", w_stack, 16'd11);
+        #1 Tester16.run_test("call/rtrn", w_stack, 16'd11);
 
         // multiple call/rtrn test
         #1 r_rst = 1'b1;
@@ -57,7 +58,7 @@ module Instruction_Stack_tb;
         r_rtrn = 1'b1;
         for (i=8'h91; i>8'h10; i=i-'h10) begin
             @(posedge r_clk);
-            #1 run_test({"multi_call/rtrn"}, w_stack, i);
+            #1 Tester16.run_test({"multi_call/rtrn"}, w_stack, i);
         end
         $finish();
     end

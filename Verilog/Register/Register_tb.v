@@ -1,5 +1,6 @@
 // Register Testbench
 `include "Register.v"
+`include "../Tester/Tester.v"
 
 module Register_tb;
     
@@ -11,7 +12,7 @@ module Register_tb;
 
     reg  [7:0] i;
     
-    `include "../run_test.v"
+    Tester #(.WIDTH(8)) Tester8();
 
     Register #(.WIDTH(8)) DUT1 (
             .i_D   (r_D), 
@@ -28,23 +29,23 @@ module Register_tb;
         @(posedge r_clk);
         #1 r_rst = 1'b1;
         #1 r_rst = 1'b0;
-        #1 run_test("reset_1", w_Q, 8'b0);
+        #1 Tester8.run_test("reset_1", w_Q, 8'b0);
         
         // we=0 test
         #1 r_D = 8'b1;
         @(posedge r_clk);
-        #1 run_test("we=0", w_Q, 8'b0); 
+        #1 Tester8.run_test("we=0", w_Q, 8'b0); 
         
         // we=1 test
         #1 r_we = 1'b1;
         @(posedge r_clk);
-        #1 run_test("we=1", w_Q, 8'b1); 
+        #1 Tester8.run_test("we=1", w_Q, 8'b1); 
         
         // 2nd reset test
         @(posedge r_clk);
         #1 r_rst = 1'b0;
         #1 r_rst = 1'b1;
-        #1 run_test("reset_2", w_Q, 8'b0); 
+        #1 Tester8.run_test("reset_2", w_Q, 8'b0); 
         
         // loop test
         #1 r_we  = 1'b1;
@@ -54,7 +55,7 @@ module Register_tb;
         #1 r_rst = 1'b0;
         for (i=0; i<10; i=i+1) begin
             @(posedge r_clk);
-            #1 run_test({"loop_", 8'h30+i}, w_Q, i);
+            #1 Tester8.run_test({"loop_", 8'h30+i}, w_Q, i);
             r_D = r_D + 8'b1;
         end
         $finish();
