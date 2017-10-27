@@ -1,29 +1,45 @@
+# Creates an incremental array (1,2,...) and then reads its content
+
 # assignments
-ASSGN LIMIT       0x00
-ASSGN LIMIT_VALUE 31
-ASSGN CURRENT     0x01
-ASSGN ARRAY       0x10
+ASSGN LIMIT   31   # 0x1F, array length
+ASSGN CURRENT 0x01 # stores current value to add to array
+ASSGN ARRAY   0x10 # start of array
 
-# initialization
-CPYPW IMM LIMIT_VALUE
-CPYWP LIMIT           # LIMIT = LIMIT_VALUE
+# if LIMIT is 0, do nothing
+ZEROW
+CMPWP IMM LIMIT
+GTIFZ END
+
+# fill initialization
+CPYPW IMM 1
+CPYWP CURRENT   # CURRENT = 1 
 CPYPW IMM ARRAY
-CPYWA                 # ADDR = ARRAY
-ZEROW                 # WREG = 0
+CPYWA           # ADDR = ARRAY
 
-# loop
-LABEL LOOP
-CPYWP CURRENT
-CMPWP FLR LIMIT
-GTIFN CONTINUE
-GOTOI END
-
-LABEL CONTINUE
-CPYPW FLR CURRENT
+# array fill loop (ADDR -> ARRAY[i])
+LABEL FILL
+CPYPW IMM LIMIT   
+CMPWP FLR CURRENT
+GTIFN READ        # if CURRENT > LIMIT: goto READ
+CPYPW FLR CURRENT 
+CPYWR             # else ARRAY[i] = CURRENT
 INCRW
-CPYWR
-INCRA
-GOTOI LOOP
+CPYWP CURRENT     # ++CURRENT
+INCRA             # ADDR -> ARRAY[i+1]
+GOTOI FILL
+
+# read initialization
+LABEL READ
+CPYPW IMM ARRAY
+CPYWA           # ADDR = ARRAY
+
+# read loop (ADDR -> ARRAY[i])
+LABEL READLOOP
+CPYRW           # WREG = ARRAY[i]
+CMPWP IMM LIMIT 
+GTIFZ END       # if WREG = ARRAY[LIMIT]: goto END
+INCRA           # ADDR -> ARRAY[i+1]
+GOTOI READLOOP
 
 LABEL END
 LOOPF

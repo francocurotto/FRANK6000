@@ -9,3 +9,4 @@ run-logisim.sh
 *.bin
 *.blif
 *.swp
+*.log

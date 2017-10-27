@@ -1,3 +1,5 @@
+# Clears the File Registers to all zeros
+
 CPYPW IMM 0
 CPYWA
 

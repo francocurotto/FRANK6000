@@ -20,5 +20,4 @@ ser = Serial(port='/dev/ttyUSB1',
 for line in inputFile:
     ser.write(bytearray.fromhex(line[2:4]+line[0:2]))
     time.sleep(0.1)
-
-
+print "Finished."

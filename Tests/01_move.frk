@@ -1,15 +1,17 @@
-CPYPW IMM 1
-CPYWP 0x00
-CPYPW IMM 2
-CPYWP 0x01
-CPYPW IMM 3
-CPYWP 0x02
-CPYWP 0x03
-CPYPW FLR 0x00
-CPYWA
-INCRA
-CPYAW
-CPYRW
-INCRW
-CPYWR
+# Moves values between WREG, File Register and ADDR
+
+CPYPW IMM 1    # WREG = 1
+CPYWP 0x00     # 0x00 = WREG (=1)
+CPYPW IMM 2    # WREG = 2
+CPYWP 0x01     # 0x01 = WREG (=2)
+CPYPW IMM 3    # WREG = 3
+CPYWP 0x02     # 0x02 = WREG (=3)
+CPYWP 0x03     # 0x03 = WREG (=3)
+CPYPW FLR 0x00 # WREG = 0x00 (=1)
+CPYWA          # ADDR = WREG (=1)
+INCRA          # ++ADDR (=2) 
+CPYAW          # WREG = ADDR (=2)
+CPYRW          # WREG = *ADDR (=*0x02=3)
+INCRW          # ++WREG (=4)
+CPYWR          # *ADDR = WREG (0x02=4)
 LOOPF

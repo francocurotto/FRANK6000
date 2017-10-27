@@ -1,29 +1,49 @@
+# Fills an array with Fibonacci numbers until the processor overflows 
+# and then reads the array
+
 # assignments
 ASSGN PREVIOUS 0x00
-ASSGN ARRAY_START 0x10
+ASSGN ARRAY    0x10
 
 # initialization
-CPYPW IMM ARRAY_START
-CPYWA                 # ADDR = ARRAY_START
-ZEROW
-CPYWR                 # ADDR[0] = 0
+CPYPW IMM ARRAY
+CPYWA           # ADDR = ARRAY
+CPYPW IMM 1
+CPYWR           # ARRAY[0] = 1
 INCRA
-INCRW
-CPYWR                 # ADDR[1] = 1
-DECRA                 # ADDR -> ADDR[0]
+CPYWR           # ARRAY[1] = 1
+DECRA           # *ADDR = ADDR[0]
 
-# loop (ADDR -> ADDR[i])
-LABEL LOOP
-CPYRW              # WREG = ADDR[i]
-CPYWP PREVIOUS     # PREVIOUS = ADDR[i]
-INCRA              # ADDR -> ADDR[i+1]
-CPYRW              # WREG = ADDR[i+1]
-ADDWP FLR PREVIOUS # WREG = WREG + PREVIOUS (= ADDR[i] + ADDR[i+1])
-GTIFC END          # if (carry): end
-INCRA              # ADDR -> ADDR[i+2]
-CPYWR              # ADDR[i+2] = ADDR[i] + ADDR[i+1]
-DECRA              # ADDR -> ADDR[i+1]
-GOTOI LOOP
+# loop (ADDR -> ARRAY[i])
+LABEL FILL
+CPYRW              # WREG = ARRAY[i]
+CPYWP PREVIOUS     # PREVIOUS = ARRAY[i]
+INCRA              # ADDR -> ARRAY[i+1]
+CPYRW              # WREG = ARRAY[i+1]
+ADDWP FLR PREVIOUS # WREG = WREG + PREVIOUS (= ARRAY[i] + ARRAY[i+1])
+GTIFC READ         # if (carry): goto READ
+INCRA              # ADDR -> ARRAY[i+2]
+CPYWR              # ARRAY[i+2] = ARRAY[i] + ARRAY[i+1]
+DECRA              # ADDR -> ARRAY[i+1]
+GOTOI FILL
+
+# read initialization
+LABEL READ
+INCRA
+ZEROW
+CPYWR           # ARRAY[end] = 0
+CPYPW IMM ARRAY
+CPYWA           # ADDR = ARRAY
+
+# read loop (ADDR -> ARRAY[i])
+LABEL READLOOP
+CPYRW          # WREG = ARRAY[i]
+ADDWP IMM 0    # activate STATUS
+GTIFZ END      # if (ARRAY[i]==0): goto END
+INCRA          # ADDR -> ARRAY[i+1]
+GOTOI READLOOP
 
 LABEL END
 LOOPF
+
+# Fibonacci sequence in hex: 01 01 02 03 05 08 0D 15 22 37 59 90 E9

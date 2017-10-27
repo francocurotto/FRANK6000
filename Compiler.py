@@ -17,10 +17,11 @@ def main():
         if line[-1] is not "\n":
             line = line + "\n"
         try:
-            processLine(line, lineNum, commandLines)
+            processLine(line, lineNum+1, commandLines)
         except:
             print "Error at trying to process line " + str(lineNum) + ":\n" + line
             print traceback.format_exc()
+            os.remove(fLgs.name)
             os.remove(fHex.name)
             exit()
             

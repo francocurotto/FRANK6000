@@ -1,43 +1,50 @@
+# Computes the collatz sequence for a given number and counts
+# the number of iterations needed to converge
+
 # assignments
 ASSGN X        0x00
-ASSGN INIT_VAL 23
 ASSGN COUNT    0x01
 
 # initialization
-CPYPW IMM INIT_VAL
-CPYWP X        # X = INIT_VAL
+CPYPW IMM 23
+CPYWP X      # X = 23
 ZEROW
-CPYWP COUNT    # COUNT = 0
+CPYWP COUNT  # COUNT = 0
 
 # loop
 LABEL LOOP
 CPYPW FLR X     # WREG = X
 ANDWP IMM 1     # WREG & 1 (get first bit)
-CPYPW FLR X     # WREG = X
-GTIFZ EVEN      # if (even): ...
-GOTOI ODD       # else if (odd): ...
+GTIFZ EVEN      # if (even): goto EVEN
+GOTOI ODD       # else if (odd): goto ODD
 LABEL RETURN    # after computation ...
 CPYPW FLR COUNT
 INCRW
 CPYWP COUNT     # COUNT++
 CPYPW FLR X     # WREG = X
 DECRW           # WREG--
-GTIFZ END       # if (WREG == 0): end
+GTIFZ END       # if (WREG == 0): goto END
 GOTOI LOOP      # else: continue with the algorithm
 
 # even case
 LABEL EVEN
-SHFRW 1          # WREG = WREG << 1 (= X/2)
-CPYWP X          # X = X/2
-GOTOI RETURN     # return to algorithm
+CPYPW FLR X  # WREG = X
+SHFRW 1      # WREG = WREG >> 1 (= X/2)
+CPYWP X      # X = X/2
+GOTOI RETURN # return to algorithm
 
 #odd case
 LABEL ODD
-ADDWP FLR X      # WREG = WREG + X (= 2*X)
-ADDWP FLR X      # WREG = WREG + X (= 3*X)
-INCRW            # WREG++ (= 3*X + 1)
-CPYWP X          # X = 3*X + 1
-GOTOI RETURN     # return to algorithm
+CPYPW FLR X  # WREG = X
+ADDWP FLR X  # WREG = WREG + X (= 2*X)
+ADDWP FLR X  # WREG = WREG + X (= 3*X)
+INCRW        # WREG++ (= 3*X + 1)
+CPYWP X      # X = 3*X + 1
+GOTOI RETURN # return to algorithm
 
 LABEL END
+CPYPW FLR COUNT # WREG = COUNT
 LOOPF
+
+# collatz_sequence(23) =   23   70   35  106   53  160   80   40   20   10    5   16    8    4    2    1
+#                        0x17 0x46 0x23 0x6A 0x35 0xA0 0x50 0x28 0x14 0x0A 0x05 0x10 0x08 0x04 0x02 0x01
