@@ -4,9 +4,10 @@
 
 module Control_Unit_tb;
 
-    reg  [3:0]  r_control_input  = 4'b0;
-    reg         r_clk            = 1'b0;
-    reg         r_rst            = 1'b0;
+    reg [3:0] r_control_input = 4'b0;
+    reg       r_clk           = 1'b0;
+    reg       r_rst           = 1'b0;
+    reg       r_en            = 1'b1;
     wire [15:0] w_control_output;
 
     Tester #(.WIDTH( 2)) Tester2 ();
@@ -16,6 +17,7 @@ module Control_Unit_tb;
         .i_control_input (r_control_input),
         .i_clk           (r_clk),
         .i_rst           (r_rst),
+        .i_en            (r_en),
         .o_jump          (w_control_output   [15]),
         .o_j_mode        (w_control_output[14:13]),
         .o_call          (w_control_output   [12]),

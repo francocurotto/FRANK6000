@@ -14,4 +14,6 @@ CPYAW          # WREG = ADDR (=2)
 CPYRW          # WREG = *ADDR (=*0x02=3)
 INCRW          # ++WREG (=4)
 CPYWR          # *ADDR = WREG (0x02=4)
+ZEROW          # WREG = 0
+CPYRW          # WREG = *ADDR (=*0x02=4)
 LOOPF

@@ -1,14 +1,15 @@
 // FRANK6000
 `include "../Debounce_Switch/Debounce_Switch.v"
 `include "../Instr_RX/Instr_RX.v"
+`include "../Pulse_Gen/Pulse_Gen.v"
 `include "../CPU/CPU.v"
 `include "../Bin_2_7Seg/Bin_2_7Seg.v"
 
 module FRANK6000 (
-    input  i_clk,      // master clock
+    input  i_clk,     // master clock
     input  i_switch1, // master reset
     input  i_switch2, // CPU switch
-    input  i_UART_RX,  // UART RX Data
+    input  i_UART_RX, // UART RX Data
     output o_LED1,    // CPU ON LED
     output o_LED2,    // CPU finish LED
     // Segment1 is the upper digit, Segment2 is the lower digit
@@ -42,6 +43,7 @@ module FRANK6000 (
         .i_switch (i_switch2),
         .o_switch (w_CPU_switch));
 
+    // Instruction Receiver
     wire [15:0] w_rx_instr;
     wire        w_rx_dv;
     // 25,000,000 / 115,200 = 217
@@ -51,27 +53,36 @@ module FRANK6000 (
         .i_rx_serial (i_UART_RX),
         .o_rx_instr  (w_rx_instr),
         .o_rx_dv     (w_rx_dv));
-    
+
+    // Pulse Generator
+    reg  r_CPU_ON     = 1'b0;
+    wire w_control_en;
+    Pulse_Gen #(.WIDTH(24)) Pulse_Gen (
+        .i_clk   (i_clk),
+        .i_rst   (w_rst),
+        .i_en    (r_CPU_ON),
+        .o_pulse (w_control_en));
+
     // FRANK6000 CPU
     reg  [7:0] r_instr_addr = 8'b0;
-    reg        r_CPU_ON     = 1'b0;
-    wire       w_we;
+    wire       w_instr_we   = ~r_CPU_ON & w_rx_dv;
     wire [7:0] w_WREG;
     CPU CPU (
         .i_instr_addr (r_instr_addr),
         .i_instr      (w_rx_instr),
         .i_ON         (r_CPU_ON),
-        .i_we         (w_we),
-        .i_rst        (w_rst),
+        .i_instr_we   (w_instr_we),
+        //.i_control_en (r_CPU_ON),
+        .i_control_en (w_control_en),
         .i_clk        (i_clk),
+        .i_rst        (w_rst),
         .o_WREG       (w_WREG),
         .o_loopf      (o_LED2));
 
-    assign w_we    = ~r_CPU_ON & w_rx_dv;
     assign o_LED1 = r_CPU_ON;
 
-    reg r_CPU_switch   = 1'b0;
-    reg r_CPU_ON_prev  = 1'b0;
+    reg r_CPU_switch  = 1'b0;
+    reg r_CPU_ON_prev = 1'b0;
     always @(posedge i_clk, posedge w_rst) begin
         if (w_rst) begin
             r_CPU_ON      <= 0;
