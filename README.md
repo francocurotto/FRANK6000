@@ -1,5 +1,5 @@
 # FRANK6000
-Multi single cicle 8 bits processor.
+Multi cycle 8 bits processor.
 
 ### Info
 - Two/three cycle per instruction
@@ -17,12 +17,13 @@ Multi single cicle 8 bits processor.
 - FRANK6000.circ: the processor implementation for Logisim-evolution software (https://github.com/reds-heig/logisim-evolution).
 - FRANK6000.ods: Spreadsheet with the instruction set, and their description.
 - FRANK6000.png: Cool image of processor schematic.
-- compiler.py: python compiler for the language.
-- tests/: various tests for the processor.
-- verilog/: a Verilog implementation of the processor (in progress).
+- Compiler.py: python compiler for the language.
+- UART_TX.py: python script to send hexadecimal instructions over UART to the processor.
+- Tests/: various tests for the processor.
+- Verilog/: a Verilog implementation of the processor.
 
 ### The processor
-![alt tag](https://github.com/francocurotto/FRANK5000/blob/master/FRANK6000.png)
+![alt tag](https://github.com/francocurotto/FRANK&000/blob/master/FRANK6000.png)
 
 ### Status
-The Logisim version of the processor is complete. The Verilog version is complete. The processor was successuffy tested in an iCE40 HX1K FPGA using the NANDLAND Go Board (https://www.nandland.com/).
+The Logisim version of the processor is complete. The Verilog version is complete. The processor was successfully tested in an iCE40 HX1K FPGA using the NANDLAND Go Board (https://www.nandland.com/).

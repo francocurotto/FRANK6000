@@ -32,13 +32,13 @@ module CPU_tb;
 
     // main testing
     initial begin
-        //$readmemh("../../Tests/01_move.hex",       DUT.Instruction_Memory.mem);
+        $readmemh("../../Tests/01_move.hex",       DUT.Instruction_Memory.mem);
         //$readmemh("../../Tests/02_add.hex",        DUT.Instruction_Memory.mem);
         //$readmemh("../../Tests/03_clear.hex",      DUT.Instruction_Memory.mem);
         //$readmemh("../../Tests/04_loop.hex",       DUT.Instruction_Memory.mem);
         //$readmemh("../../Tests/05_fibonacci.hex",  DUT.Instruction_Memory.mem);
         //$readmemh("../../Tests/06_collatz.hex",    DUT.Instruction_Memory.mem);
-        $readmemh("../../Tests/07_mult.hex",       DUT.Instruction_Memory.mem);
+        //$readmemh("../../Tests/07_mult.hex",       DUT.Instruction_Memory.mem);
         //$readmemh("../../Tests/08_call.hex",       DUT.Instruction_Memory.mem);
         //$readmemh("../../Tests/09_multi_call.hex", DUT.Instruction_Memory.mem);
         
