@@ -57,7 +57,7 @@ module FRANK6000 (
     // Pulse Generator
     reg  r_CPU_ON     = 1'b0;
     wire w_control_en;
-    Pulse_Gen #(.WIDTH(24)) Pulse_Gen (
+    Pulse_Gen #(.WIDTH(20)) Pulse_Gen (
         .i_clk   (i_clk),
         .i_rst   (w_rst),
         .i_en    (r_CPU_ON),
@@ -72,7 +72,6 @@ module FRANK6000 (
         .i_instr      (w_rx_instr),
         .i_ON         (r_CPU_ON),
         .i_instr_we   (w_instr_we),
-        //.i_control_en (r_CPU_ON),
         .i_control_en (w_control_en),
         .i_clk        (i_clk),
         .i_rst        (w_rst),
@@ -87,6 +86,8 @@ module FRANK6000 (
         if (w_rst) begin
             r_CPU_ON      <= 0;
             r_CPU_ON_prev <= 0;
+            r_instr_addr <= 0;
+
         end
         else begin
             // Toggle r_CPU_ON in falling edge of r_CPU_switch

@@ -11,6 +11,6 @@ module Pulse_Gen #(parameter WIDTH=24) (
         else if (i_en) r_counter = r_counter + 'b1;
     end
 
-    assign o_pulse = ~|r_counter;
+    assign o_pulse = &r_counter;
 
 endmodule

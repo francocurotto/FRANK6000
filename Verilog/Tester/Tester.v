@@ -10,7 +10,7 @@ module Tester #(parameter WIDTH=8);
             if (i_actual_res == i_expctd_res)
                 $display("test %s at %4d[s] PASS", i_test_name, $stime);
             else
-                $display("test %s at %4d[s] FAILED, expected res=%h, got %h", 
+                $display("test %s at %4d[s] FAILED, expected %h, got %h", 
                 i_test_name, $stime, i_expctd_res, i_actual_res);
         end
     endtask

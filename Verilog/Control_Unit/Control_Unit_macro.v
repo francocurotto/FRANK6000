@@ -1,8 +1,9 @@
 `define _Control_Unit_macro_v_
 
-`define INSTR_FETCH  2'b01
-`define CYCLE1_INSTR 2'b10
-`define CYCLE2_INSTR 2'b00
+`define INSTR_SELECT  2'b00
+`define INSTR1_CYCLE1 2'b01
+`define INSTR2_CYCLE1 2'b10
+`define INSTR2_CYCLE2 2'b11
 
 `define LOOPF     4'b0000
 `define GOTO_jump 4'b0001

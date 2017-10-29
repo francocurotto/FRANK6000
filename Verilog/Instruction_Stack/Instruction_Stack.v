@@ -24,6 +24,7 @@ module Instruction_Stack #(
             .i_data  (w_stack_in), 
             .i_clk   (i_clk), 
             .i_we    (i_call), 
+            .i_re    (i_rtrn),
             .or_data (o_stack));
 
     always @(posedge i_clk, posedge i_rst) begin

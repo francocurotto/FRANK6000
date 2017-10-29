@@ -8,6 +8,7 @@ module RAM_tb;
     reg  [7:0] r_data;
     reg        r_clk   = 1'b0;
     reg        r_we    = 1'b0;
+    reg        r_re    = 1'b0;
     wire [7:0] w_data;
 
     reg  [7:0] i;
@@ -21,6 +22,7 @@ module RAM_tb;
             .i_data  (r_data), 
             .i_clk   (r_clk),
             .i_we    (r_we), 
+            .i_re    (r_re), 
             .or_data (w_data));
 
     always #10 r_clk <= !r_clk;
@@ -31,6 +33,7 @@ module RAM_tb;
         #1 r_addr = 8'd3;
         #1 r_data = 8'd11;
         #1 r_we   = 1'b1;
+        #1 r_re   = 1'b1;
         @(posedge r_clk); // write in RAM
         @(posedge r_clk); // output RAM
         #1 Tester8.run_test("read/write 1", w_data, 8'd11);
@@ -50,18 +53,29 @@ module RAM_tb;
         //
         #1 r_addr = 8'd6;
         #1 r_data = 8'd44;
+        #1 r_we   = 1'b0;
+        #1 r_re   = 1'b0;
         @(posedge r_clk);
         @(posedge r_clk);
-        #1 Tester8.run_test("read/write 4", w_data, 8'd22);
+        #1 Tester8.run_test("read/write 4", w_data, 8'd11);
+        #1 r_re   = 1'b1;
+        @(posedge r_clk);
+        #1 Tester8.run_test("read/write 5", w_data, 8'd22);
+        #1 r_we   = 1'b1;
+        @(posedge r_clk);
+        @(posedge r_clk);
+        #1 Tester8.run_test("read/write 6", w_data, 8'd44);
 
         // loop test
         #1 r_we = 1'b1;
+        #1 r_re = 1'b0;
         for (i=8'd1; i<8'd10; i=i+1) begin
             #1 r_addr = i;
             #1 r_data = i*10;
             @(posedge r_clk);
         end
         #1 r_we = 1'b0;
+        #1 r_re = 1'b1;
         for (i=8'd1; i<8'd10; i=i+1) begin
             #1 r_addr = i;
             @(posedge r_clk);

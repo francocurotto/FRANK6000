@@ -25,6 +25,7 @@ module CPU (
     wire        w_FRin;
     wire        w_ALUin1;
     wire        w_ALUin2;
+    wire        w_FRr;
     wire        w_PCw;
     wire        w_ADDRw;
     wire        w_FRw;
@@ -46,6 +47,7 @@ module CPU (
         .o_WREGin        (w_WREGin), 
         .o_ALUin1        (w_ALUin1), 
         .o_ALUin2        (w_ALUin2), 
+        .o_FRr           (w_FRr), 
         .o_PCw           (w_PCw), 
         .o_ADDRw         (w_ADDRw), 
         .o_FRw           (w_FRw), 
@@ -94,6 +96,7 @@ module CPU (
             .i_data  (i_instr), 
             .i_clk   (i_clk), 
             .i_we    (i_instr_we), 
+            .i_re    (1'b1), 
             .or_data (w_instr));
 
     // Jump Control
@@ -131,6 +134,7 @@ module CPU (
             .i_data  (w_WREG), 
             .i_clk   (i_clk), 
             .i_we    (w_FRw), 
+            .i_re    (w_FRr), 
             .or_data (w_FR));
 
     assign w_FR_addr = (w_FRin==0) ? w_instr[7:0] :

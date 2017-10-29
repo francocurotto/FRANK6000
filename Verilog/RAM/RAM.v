@@ -8,14 +8,14 @@ module RAM #(
     parameter DATA_WIDTH  = 8) (
     input      [ADDR_WIDTH-1:0] i_addr,    
     input      [DATA_WIDTH-1:0] i_data,
-    input                       i_clk, i_we,
+    input                       i_clk, i_we, i_re,
     output reg [DATA_WIDTH-1:0] or_data);
     
     reg [DATA_WIDTH-1:0] mem [(1<<ADDR_WIDTH)-1:0];
 
     always @(posedge i_clk) begin
         if (i_we) mem[i_addr] <= i_data;
-        or_data = mem[i_addr];
+        if (i_re) or_data = mem[i_addr];
     end
 
 endmodule
