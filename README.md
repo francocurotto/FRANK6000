@@ -23,7 +23,7 @@ Multi cycle 8 bits processor.
 - Verilog/: a Verilog implementation of the processor.
 
 ### The processor
-![alt tag](https://github.com/francocurotto/FRANK&000/blob/master/FRANK6000.png)
+![alt tag](https://github.com/francocurotto/FRANK6000/blob/master/FRANK6000.png)
 
 ### Status
 The Logisim version of the processor is complete. The Verilog version is complete. The processor was successfully tested in an iCE40 HX1K FPGA using the NANDLAND Go Board (https://www.nandland.com/).
