@@ -102,13 +102,13 @@ module FRANK6000 (
     end
         
     // Binary to 7-Segments Converter for Upper Digit
-    wire w_Segment1_A;
-    wire w_Segment1_B;
-    wire w_Segment1_C;
-    wire w_Segment1_D;
-    wire w_Segment1_E;
-    wire w_Segment1_F;
-    wire w_Segment1_G;
+    wire w_segment1_A;
+    wire w_segment1_B;
+    wire w_segment1_C;
+    wire w_segment1_D;
+    wire w_segment1_E;
+    wire w_segment1_F;
+    wire w_segment1_G;
     Bin_2_7Seg SSeg1 (
         .i_clk(i_clk),
         .i_binary_num(w_WREG[7:4]),
@@ -129,13 +129,13 @@ module FRANK6000 (
     assign o_segment1_G = ~w_segment1_G;
         
     // Binary to 7-Segments Converter for Lower Digit
-    wire w_Segment2_A;
-    wire w_Segment2_B;
-    wire w_Segment2_C;
-    wire w_Segment2_D;
-    wire w_Segment2_E;
-    wire w_Segment2_F;
-    wire w_Segment2_G;
+    wire w_segment2_A;
+    wire w_segment2_B;
+    wire w_segment2_C;
+    wire w_segment2_D;
+    wire w_segment2_E;
+    wire w_segment2_F;
+    wire w_segment2_G;
     Bin_2_7Seg SSeg_2 (
         .i_clk(i_clk),
         .i_binary_num(w_WREG[3:0]),
