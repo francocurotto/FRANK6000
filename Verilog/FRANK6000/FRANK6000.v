@@ -55,7 +55,7 @@ module FRANK6000 (
         .o_rx_dv     (w_rx_dv));
 
     // Pulse Generator
-    reg  r_CPU_ON     = 1'b0;
+    reg  r_CPU_ON = 1'b0;
     wire w_control_en;
     Pulse_Gen #(.WIDTH(20)) Pulse_Gen (
         .i_clk   (i_clk),
@@ -86,8 +86,7 @@ module FRANK6000 (
         if (w_rst) begin
             r_CPU_ON      <= 0;
             r_CPU_ON_prev <= 0;
-            r_instr_addr <= 0;
-
+            r_instr_addr  <= 0;
         end
         else begin
             // Toggle r_CPU_ON in falling edge of r_CPU_switch
